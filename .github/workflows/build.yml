@@ -2,9 +2,8 @@ name: Build check
 
 on:
   push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
+    types: [opened, reopened]
   workflow_dispatch:
     inputs:
       IS_RELEASE:
@@ -47,11 +46,11 @@ jobs:
           echo "MINOR: ${{ steps.version.outputs.group2 }}"
           echo "PATCH: ${{ steps.version.outputs.group3 }}"
       - if: ${{ steps.version.outputs.group1 == ''}}
-        run: echo "BUILD_VERSION=v2.0.0" >> $GITHUB_ENV
+        run: echo "BUILD_VERSION=2.0.0" >> $GITHUB_ENV
       - if: ${{ steps.version.outputs.group2 == ''}}
-        run: echo "BUILD_VERSION=v${{ steps.version.outputs.group1 }}.0.0" >> $GITHUB_ENV
+        run: echo "BUILD_VERSION=${{ steps.version.outputs.group1 }}.0.0" >> $GITHUB_ENV
       - if: ${{ steps.version.outputs.group3 == ''}}
-        run: echo "BUILD_VERSION=v${{ steps.version.outputs.group1 }}.${{ steps.version.outputs.group2 }}.0" >> $GITHUB_ENV
+        run: echo "BUILD_VERSION=${{ steps.version.outputs.group1 }}.${{ steps.version.outputs.group2 }}.0" >> $GITHUB_ENV
       - if: ${{ steps.version.outputs.group3 != ''}}
         run: |
           VERSION_PATCH=${{ steps.version.outputs.group3 }}
@@ -62,7 +61,7 @@ jobs:
         run: ./gradlew build -P buildVersion=${{ env.BUILD_VERSION }}
       - name: Publish
         if: ${{ inputs.IS_RELEASE }}
-        run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
+        run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository  -P buildVersion=${{ env.BUILD_VERSION }}
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
