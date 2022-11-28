@@ -33,7 +33,7 @@ jobs:
         id: tag_version
         uses: oprypin/find-latest-tag@v1
         with:
-          repository: octopusden/cloud-commons
+          repository: octopusden/octopus-cloud-commons
           prefix: v
       - uses: actions-ecosystem/action-regex-match@v2
         id: version
