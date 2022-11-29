@@ -33,7 +33,7 @@ jobs:
         uses: oprypin/find-latest-tag@v1
         with:
           repository: octopusden/octopus-cloud-commons
-          prefix: v
+          regex: '^v([0-9]+)\..*'
       - uses: actions-ecosystem/action-regex-match@v2
         id: version
         name: Prepare a version from a tag
