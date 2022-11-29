@@ -8,6 +8,8 @@ plugins {
     `signing`
 }
 
+group = "org.octopusden"
+
 repositories {
     mavenCentral()
 }
