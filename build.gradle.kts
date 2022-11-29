@@ -8,8 +8,6 @@ plugins {
     `signing`
 }
 
-group = "org.octopusden"
-
 repositories {
     mavenCentral()
 }
@@ -25,19 +23,15 @@ nexusPublishing {
     }
 }
 
-signing {
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useInMemoryPgpKeys(signingKey, signingPassword)
-}
 
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "idea")
+    apply(plugin = "signing")
 
-    group = "org.octopusden.cloud-commons"
+    group = "org.octopusden.octopus-cloud-commons"
 
     java {
         withJavadocJar()
@@ -51,6 +45,12 @@ subprojects {
     idea.module {
         isDownloadJavadoc = true
         isDownloadSources = true
+    }
+
+    signing {
+        val signingKey: String? by project
+        val signingPassword: String? by project
+        useInMemoryPgpKeys(signingKey, signingPassword)
     }
 
     publishing {

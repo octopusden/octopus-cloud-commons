@@ -1,4 +1,4 @@
-rootProject.name = "cloud-commons"
+rootProject.name = "octopus-cloud-commons"
 
 pluginManagement {
     plugins {
@@ -11,4 +11,4 @@ pluginManagement {
         mavenCentral()
     }
 }
-include("security-common")
+include("octopus-security-common")
