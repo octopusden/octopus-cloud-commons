@@ -11,4 +11,7 @@ pluginManagement {
         mavenCentral()
     }
 }
+
 include("octopus-security-common")
+
+project(":octopus-security-common").projectDir = file("./security-common")
