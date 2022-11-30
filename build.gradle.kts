@@ -23,6 +23,7 @@ nexusPublishing {
     }
 }
 
+group = "org.octopusden.octopus-cloud-commons"
 
 subprojects {
     apply(plugin = "java-library")
