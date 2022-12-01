@@ -39,26 +39,9 @@ subprojects {
         withSourcesJar()
     }
 
-    repositories {
-        mavenCentral()
-    }
-
-    idea.module {
-        isDownloadJavadoc = true
-        isDownloadSources = true
-    }
-
-    signing {
-        sign(publishing.publications)
-        val signingKey: String? by project
-        val signingPassword: String? by project
-        useInMemoryPgpKeys(signingKey, signingPassword)
-    }
-
     publishing {
         publications {
-            create<MavenPublication>("maven") {
-                from(components["java"])
+            create<MavenPublication>("mavenJava") {
                 pom {
                     name.set(project.name)
                     description.set("Octopus module(${project.name}) for cloud-commons")
@@ -82,6 +65,22 @@ subprojects {
                 }
             }
         }
+    }
+
+    signing {
+        val signingKey: String? by project
+        val signingPassword: String? by project
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign(publishing.publications["mavenJava"])
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    idea.module {
+        isDownloadJavadoc = true
+        isDownloadSources = true
     }
 
     tasks.withType<Test> {
