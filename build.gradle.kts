@@ -25,6 +25,12 @@ nexusPublishing {
 
 group = "org.octopusden.octopus-cloud-commons"
 
+allprojects {
+    dependencyLocking {
+        lockAllConfigurations()
+    }
+}
+
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
@@ -42,6 +48,7 @@ subprojects {
     publishing {
         publications {
             create<MavenPublication>("mavenJava") {
+                from(components["java"])
                 pom {
                     name.set(project.name)
                     description.set("Octopus module(${project.name}) for cloud-commons")
@@ -91,7 +98,7 @@ subprojects {
         implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
         implementation(kotlin("stdlib"))
 
-        testImplementation(enforcedPlatform("org.junit:junit-bom:${rootProject.properties["junit-jupiter.version"]}"))
+        testImplementation(platform("org.junit:junit-bom:${rootProject.properties["junit-jupiter.version"]}"))
         testImplementation("org.junit.jupiter:junit-jupiter-engine")
         testImplementation("org.junit.jupiter:junit-jupiter-params")
         testImplementation("org.junit.vintage:junit-vintage-engine")
