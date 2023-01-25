@@ -34,7 +34,8 @@ jobs:
         with:
           repository: octopusden/octopus-cloud-commons
           regex: '^v([0-9]+)\..*'
-      - user: octopusden/octopus-base/.github/actions/get-version@main
+      - uses: octopusden/octopus-base/.github/actions/get-version@main
+        name: Get version
         id: version
         with:
           tag-value: ${{ steps.tag_version.outputs.tag }}
