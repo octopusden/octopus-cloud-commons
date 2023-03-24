@@ -8,7 +8,7 @@ Cloud Commons library unifies security flow for microservices based on Spring Cl
 ```groovy
 implementation(platform("org.springframework.boot:spring-boot-dependencies:${project['spring-boot.version']}"))
 implementation(platform("org.springframework.cloud:spring-cloud-dependencies:${project['spring-cloud.version']}"))
-implementation("com.openwaygroup.cloud-commons:security-common:1.36")
+implementation("org.octopusden.octopus-cloud-commons:octopus-security-common:1.36")
 
 implementation("org.springframework.boot:spring-boot-starter-security")
 implementation("org.springframework.security:spring-security-oauth2-resource-server")
@@ -19,7 +19,7 @@ implementation("org.springframework.security:spring-security-oauth2-jose")
 ```kotlin
 @Configuration
 @Import(AuthServerClient::class)
-class WebSecurityConfig(authServerClient: AuthServerClient) : F1CloudCommonWebSecurityConfig(authServerClient)
+class WebSecurityConfig(authServerClient: AuthServerClient) : CloudCommonWebSecurityConfig(authServerClient)
 ```
 
 ### application.yml
