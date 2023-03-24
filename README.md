@@ -19,7 +19,7 @@ implementation("org.springframework.security:spring-security-oauth2-jose")
 ```kotlin
 @Configuration
 @Import(AuthServerClient::class)
-class WebSecurityConfig(authServerClient: AuthServerClient) : F1CloudCommonWebSecurityConfig(authServerClient)
+class WebSecurityConfig(authServerClient: AuthServerClient) : CloudCommonWebSecurityConfig(authServerClient)
 ```
 
 ### application.yml
