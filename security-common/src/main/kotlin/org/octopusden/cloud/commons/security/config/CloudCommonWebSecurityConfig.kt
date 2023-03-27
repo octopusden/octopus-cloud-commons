@@ -55,6 +55,7 @@ abstract class CloudCommonWebSecurityConfig(private val authServerClient: AuthSe
             .antMatchers("/",
                 "/actuator/**",
                 "/v2/api-docs",
+                "/v3/api-docs",
                 "/swagger-resources/**",
                 "/swagger-ui/**")
     }
