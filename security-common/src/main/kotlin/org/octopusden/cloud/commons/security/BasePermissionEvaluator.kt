@@ -14,7 +14,9 @@ abstract class BasePermissionEvaluator(
     open fun hasPermission(permission: String): Boolean {
         val (username, roles) = securityService.getCurrentUser()
         val permissions = roles.flatMap { it.permissions }
-        log.trace("Check '$permission' in '$username' permissions $permissions'")
+        if (log.isTraceEnabled) {
+            log.trace("Check '$permission' in '$username' permissions $permissions'")
+        }
         return permissions
             .contains(permission)
             .also {
@@ -41,7 +43,9 @@ abstract class BasePermissionEvaluator(
         val log: Logger = LoggerFactory.getLogger(BasePermissionEvaluator::class.java)
 
         fun logGrants(username: String, permission: String, accessType: String, it: Boolean) {
-            log.debug("User '$username' was${if (it) "" else " not"} granted permission '$permission' to $accessType access")
+            if (log.isDebugEnabled) {
+                log.debug("User '$username' was${if (it) "" else " not"} granted permission '$permission' to $accessType access")
+            }
         }
     }
 }
