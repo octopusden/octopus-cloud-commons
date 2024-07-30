@@ -1,11 +1,10 @@
 plugins {
-    id("org.octopusden.release-management")
     java
     `maven-publish`
     idea
     id("org.jetbrains.kotlin.jvm") apply (false)
     id("io.github.gradle-nexus.publish-plugin")
-    `signing`
+    signing
 }
 
 repositories {
