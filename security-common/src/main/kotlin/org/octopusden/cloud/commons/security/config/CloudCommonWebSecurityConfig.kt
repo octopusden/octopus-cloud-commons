@@ -1,6 +1,6 @@
 package org.octopusden.cloud.commons.security.config
 
-import javax.annotation.PostConstruct
+import jakarta.annotation.PostConstruct
 import org.octopusden.cloud.commons.security.SecurityService
 import org.octopusden.cloud.commons.security.client.AuthServerClient
 import org.octopusden.cloud.commons.security.converter.UserInfoGrantedAuthoritiesConverter
@@ -35,7 +35,7 @@ abstract class CloudCommonWebSecurityConfig(private val authServerClient: AuthSe
     open fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .authorizeRequests()
-            .antMatchers(
+            .requestMatchers(
                 "/",
                 "/actuator/**",
                 "/v2/api-docs",
