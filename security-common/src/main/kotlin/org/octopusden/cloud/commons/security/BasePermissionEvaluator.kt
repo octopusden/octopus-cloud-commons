@@ -1,7 +1,7 @@
 package org.octopusden.cloud.commons.security
 
+import org.octopusden.cloud.commons.security.utils.logger
 import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.security.access.PermissionEvaluator
 import org.springframework.security.core.Authentication
 import java.io.Serializable
@@ -40,7 +40,7 @@ abstract class BasePermissionEvaluator(
     }
 
     companion object {
-        val log: Logger = LoggerFactory.getLogger(BasePermissionEvaluator::class.java)
+        val log: Logger = logger<BasePermissionEvaluator>()
 
         fun logGrants(username: String, permission: String, accessType: String, it: Boolean) {
             if (log.isDebugEnabled) {

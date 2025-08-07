@@ -5,7 +5,7 @@ import org.octopusden.cloud.commons.security.client.dto.OpenIdConfiguration
 import org.octopusden.cloud.commons.security.client.dto.UserInfo
 import org.octopusden.cloud.commons.security.config.AuthClientProperties
 import org.octopusden.cloud.commons.security.config.AuthServerProperties
-import org.slf4j.LoggerFactory
+import org.octopusden.cloud.commons.security.utils.logger
 import org.springframework.beans.factory.BeanInitializationException
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.http.HttpEntity
@@ -40,11 +40,11 @@ class AuthServerClient(
         try {
             openIdConfiguration = authServerProperties.openIdConfigurationUrl
                 ?.let { openIdConfigurationUrl ->
-                        restTemplate.getForEntity(openIdConfigurationUrl, OpenIdConfiguration::class.java)
-                            .body ?: throw OAuth2AuthenticationException(
-                            OAuth2Error("invalid_request"),
-                            "Cannot Extract openid-configuration via $openIdConfigurationUrl"
-                        )
+                    restTemplate.getForEntity(openIdConfigurationUrl, OpenIdConfiguration::class.java)
+                        .body ?: throw OAuth2AuthenticationException(
+                        OAuth2Error("invalid_request"),
+                        "Cannot Extract openid-configuration via $openIdConfigurationUrl"
+                    )
                 } ?: throw BeanInitializationException("Open ID Configuration URL must be provided")
 
         } catch (e: Exception) {
@@ -59,12 +59,14 @@ class AuthServerClient(
     fun getUserInfo(token: String): UserInfo {
         val headers = HttpHeaders()
         headers.add("Authorization", "Bearer $token")
-        return validateResponse(restTemplate.exchange(
-            openIdConfiguration.userInfoEndpoint,
-            HttpMethod.GET,
-            HttpEntity<String>(headers),
-            UserInfo::class.java
-        ))
+        return validateResponse(
+            restTemplate.exchange(
+                openIdConfiguration.userInfoEndpoint,
+                HttpMethod.GET,
+                HttpEntity<String>(headers),
+                UserInfo::class.java
+            )
+        )
     }
 
     fun generateOfflineJwt(username: String, password: String): OfflineJwt {
@@ -125,6 +127,7 @@ class AuthServerClient(
             }
             return responseEntity.body ?: throw IllegalStateException("Auth server response body is not accessible")
         }
-        private val log = LoggerFactory.getLogger(AuthServerClient::class.java)
+
+        private val log = logger<AuthServerClient>()
     }
 }
