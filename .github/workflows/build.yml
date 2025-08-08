@@ -7,4 +7,4 @@ jobs:
     uses: octopusden/octopus-base/.github/workflows/common-java-gradle-build.yml@v2.1.7
     with:
       flow-type: public
-      java-version: '8'
+      java-version: '21'

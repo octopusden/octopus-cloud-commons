@@ -3,13 +3,11 @@ package org.octopusden.cloud.commons.security
 import org.octopusden.cloud.commons.security.config.SecurityProperties
 import org.octopusden.cloud.commons.security.dto.Role
 import org.octopusden.cloud.commons.security.dto.User
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Component
 
 @Component
-@EnableConfigurationProperties(SecurityProperties::class)
 open class SecurityService(private val securityProperties: SecurityProperties) {
     fun getCurrentUser(): User {
         return SecurityContextHolder.getContext()
