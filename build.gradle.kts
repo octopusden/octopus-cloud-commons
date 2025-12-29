@@ -74,6 +74,9 @@ subprojects {
     }
 
     signing {
+        isRequired = System.getenv().let {
+            it.containsKey("ORG_GRADLE_PROJECT_signingKey") && it.containsKey("ORG_GRADLE_PROJECT_signingPassword")
+        }
         val signingKey: String? by project
         val signingPassword: String? by project
         useInMemoryPgpKeys(signingKey, signingPassword)
