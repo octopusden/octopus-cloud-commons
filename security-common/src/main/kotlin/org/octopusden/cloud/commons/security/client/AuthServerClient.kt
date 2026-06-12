@@ -23,7 +23,12 @@ import org.springframework.web.client.RestTemplate
 
 private const val PASSWORD_GRANT_TYPE = "password"
 private const val REFRESH_TOKEN_GRANT_TYPE = "refresh_token"
-private const val OFFLINE_ACCESS_SCOPE = "offline_access"
+// "openid" is mandatory alongside "offline_access": this client's own
+// getUserInfo() hits the OIDC userinfo endpoint, and Keycloak serves userinfo
+// only for tokens carrying the "openid" scope. A token minted without it
+// authenticates fine but then fails authority resolution with 403 on every
+// request to a service protected by this library.
+private const val OFFLINE_JWT_SCOPE = "openid offline_access"
 private val successStatuses = setOf(HttpStatus.OK)
 
 
@@ -76,7 +81,7 @@ class AuthServerClient(
                 add("username", username)
                 add("password", password)
             }
-        }, PASSWORD_GRANT_TYPE, OFFLINE_ACCESS_SCOPE)
+        }, PASSWORD_GRANT_TYPE, OFFLINE_JWT_SCOPE)
     }
 
     fun refreshOfflineJwt(refreshToken: String): OfflineJwt {
