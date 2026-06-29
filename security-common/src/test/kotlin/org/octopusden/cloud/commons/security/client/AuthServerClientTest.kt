@@ -70,7 +70,7 @@ class AuthServerClientTest {
         )
 
     private fun capturedParams(): Map<String, List<String>> =
-        capturedTokenRequestBody!!
+        requireNotNull(capturedTokenRequestBody) { "No token request captured" }
             .split("&")
             .map { it.split("=", limit = 2) }
             .groupBy({ URLDecoder.decode(it[0], Charsets.UTF_8) }, { URLDecoder.decode(it[1], Charsets.UTF_8) })
