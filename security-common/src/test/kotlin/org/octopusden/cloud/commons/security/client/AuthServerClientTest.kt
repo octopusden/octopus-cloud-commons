@@ -98,5 +98,6 @@ class AuthServerClientTest {
         assertEquals("alice", params.getValue("username").single())
         assertEquals("secret", params.getValue("password").single())
         assertEquals("test-client", params.getValue("client_id").single())
+        assertEquals("test-secret", params.getValue("client_secret").single())
     }
 }
