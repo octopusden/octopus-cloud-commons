@@ -104,5 +104,8 @@ subprojects {
         testImplementation("org.junit.jupiter:junit-jupiter-engine")
         testImplementation("org.junit.jupiter:junit-jupiter-params")
         testImplementation("org.junit.vintage:junit-vintage-engine")
+        // Align the launcher Gradle injects with the junit-bom version; without
+        // this pin test discovery fails with "OutputDirectoryProvider not available".
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
 }
