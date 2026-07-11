@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate
 
 private const val PASSWORD_GRANT_TYPE = "password"
 private const val REFRESH_TOKEN_GRANT_TYPE = "refresh_token"
+
 // "openid" is mandatory alongside "offline_access": this client's own
 // getUserInfo() hits the OIDC userinfo endpoint, and Keycloak serves userinfo
 // only for tokens carrying the "openid" scope. A token minted without it
@@ -31,12 +32,11 @@ private const val REFRESH_TOKEN_GRANT_TYPE = "refresh_token"
 private const val OFFLINE_JWT_SCOPE = "openid offline_access"
 private val successStatuses = setOf(HttpStatus.OK)
 
-
 @EnableConfigurationProperties(AuthClientProperties::class, AuthServerProperties::class)
 @Component
 class AuthServerClient(
     authServerProperties: AuthServerProperties,
-    private val authClientProperties: AuthClientProperties
+    private val authClientProperties: AuthClientProperties,
 ) {
     private val restTemplate = RestTemplate(SimpleClientHttpRequestFactory())
     private val openIdConfiguration: OpenIdConfiguration
@@ -45,18 +45,18 @@ class AuthServerClient(
         try {
             openIdConfiguration = authServerProperties.openIdConfigurationUrl
                 ?.let { openIdConfigurationUrl ->
-                    restTemplate.getForEntity(openIdConfigurationUrl, OpenIdConfiguration::class.java)
+                    restTemplate
+                        .getForEntity(openIdConfigurationUrl, OpenIdConfiguration::class.java)
                         .body ?: throw OAuth2AuthenticationException(
                         OAuth2Error("invalid_request"),
-                        "Cannot Extract openid-configuration via $openIdConfigurationUrl"
+                        "Cannot Extract openid-configuration via $openIdConfigurationUrl",
                     )
                 } ?: throw BeanInitializationException("Open ID Configuration URL must be provided")
-
         } catch (e: Exception) {
             throw OAuth2AuthenticationException(
                 OAuth2Error("invalid_request"),
                 "Cannot get openid-configuration via ${authServerProperties.openIdConfigurationUrl}",
-                e
+                e,
             )
         }
     }
@@ -69,12 +69,15 @@ class AuthServerClient(
                 openIdConfiguration.userInfoEndpoint,
                 HttpMethod.GET,
                 HttpEntity<String>(headers),
-                UserInfo::class.java
-            )
+                UserInfo::class.java,
+            ),
         )
     }
 
-    fun generateOfflineJwt(username: String, password: String): OfflineJwt {
+    fun generateOfflineJwt(
+        username: String,
+        password: String,
+    ): OfflineJwt {
         log.trace("Generate Access Token for user: '$username'")
         return getOfflineJwt({
             with(it) {
@@ -96,7 +99,7 @@ class AuthServerClient(
     private fun getOfflineJwt(
         extendParams: (LinkedMultiValueMap<String, String>) -> Unit = {},
         grantType: String,
-        scope: String? = null
+        scope: String? = null,
     ): OfflineJwt {
         val params = LinkedMultiValueMap<String, String>().apply {
             add("client_id", authClientProperties.clientId)
@@ -116,7 +119,7 @@ class AuthServerClient(
             openIdConfiguration.tokenEndpoint,
             HttpMethod.POST,
             formEntity,
-            OfflineJwt::class.java
+            OfflineJwt::class.java,
         )
         return validateResponse(responseEntity)
     }
@@ -127,7 +130,7 @@ class AuthServerClient(
             if (statusCode !in successStatuses) {
                 throw OAuth2AuthenticationException(
                     OAuth2Error("invalid_auth_server_response"),
-                    "Auth server error: '${responseEntity.body?.toString()}'"
+                    "Auth server error: '${responseEntity.body?.toString()}'",
                 )
             }
             return responseEntity.body ?: throw IllegalStateException("Auth server response body is not accessible")

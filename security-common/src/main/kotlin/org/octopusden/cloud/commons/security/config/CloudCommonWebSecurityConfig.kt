@@ -18,16 +18,15 @@ import org.springframework.security.web.SecurityFilterChain
 @EnableConfigurationProperties(SecurityProperties::class)
 abstract class CloudCommonWebSecurityConfig(
     private val authServerClient: AuthServerClient,
-    protected val securityProperties: SecurityProperties
+    protected val securityProperties: SecurityProperties,
 ) {
-
     @PostConstruct
     fun printLoadedRoles() {
         log.info(
             "Loaded roles: {}",
             securityProperties.roles
                 .map { (role, permissions) -> "$role: [${permissions.joinToString()}]" }
-                .joinToString("\n")
+                .joinToString("\n"),
         )
     }
 
@@ -43,23 +42,21 @@ abstract class CloudCommonWebSecurityConfig(
                         "/v3/api-docs",
                         "/v3/api-docs/swagger-config",
                         "/swagger-resources/**",
-                        "/swagger-ui/**"
-                    )
-                    .permitAll()
-                    .anyRequest().authenticated()
-            }
-            .oauth2ResourceServer { oauth2 ->
+                        "/swagger-ui/**",
+                    ).permitAll()
+                    .anyRequest()
+                    .authenticated()
+            }.oauth2ResourceServer { oauth2 ->
                 oauth2.jwt { jwt ->
                     jwt.jwtAuthenticationConverter(
                         JwtAuthenticationConverter().apply {
                             setJwtGrantedAuthoritiesConverter(
-                                UserInfoGrantedAuthoritiesConverter(authServerClient)
+                                UserInfoGrantedAuthoritiesConverter(authServerClient),
                             )
-                        }
+                        },
                     )
                 }
-            }
-            .cors { it.disable() }
+            }.cors { it.disable() }
         return http.build()
     }
 

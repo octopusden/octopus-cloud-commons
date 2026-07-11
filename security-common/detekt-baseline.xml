@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ClassOrdering:AuthServerClient.kt$AuthServerClient.Companion$private val log = logger&lt;AuthServerClient&gt;()</ID>
+    <ID>TooGenericExceptionCaught:AuthServerClient.kt$AuthServerClient$e: Exception</ID>
+    <ID>UseCheckOrError:AuthServerClient.kt$AuthServerClient.Companion$throw IllegalStateException("Auth server response body is not accessible")</ID>
+  </CurrentIssues>
+</SmellBaseline>

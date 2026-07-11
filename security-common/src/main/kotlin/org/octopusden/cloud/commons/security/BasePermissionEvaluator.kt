@@ -8,9 +8,8 @@ import java.io.Serializable
 
 @Suppress("MemberVisibilityCanBePrivate")
 abstract class BasePermissionEvaluator(
-    protected val securityService: SecurityService
+    protected val securityService: SecurityService,
 ) : PermissionEvaluator {
-
     open fun hasPermission(permission: String): Boolean {
         val (username, roles) = securityService.getCurrentUser()
         val permissions = roles.flatMap { it.permissions }
@@ -24,8 +23,12 @@ abstract class BasePermissionEvaluator(
             }
     }
 
-    override fun hasPermission(authentication: Authentication?, targetDomainObject: Any?, permission: Any?): Boolean {
-        //could be implemented later
+    override fun hasPermission(
+        authentication: Authentication?,
+        targetDomainObject: Any?,
+        permission: Any?,
+    ): Boolean {
+        // could be implemented later
         return false
     }
 
@@ -33,16 +36,21 @@ abstract class BasePermissionEvaluator(
         authentication: Authentication?,
         targetId: Serializable?,
         targetType: String?,
-        permission: Any?
+        permission: Any?,
     ): Boolean {
-        //could be implemented later
+        // could be implemented later
         return false
     }
 
     companion object {
         val log: Logger = logger<BasePermissionEvaluator>()
 
-        fun logGrants(username: String, permission: String, accessType: String, it: Boolean) {
+        fun logGrants(
+            username: String,
+            permission: String,
+            accessType: String,
+            it: Boolean,
+        ) {
             if (log.isDebugEnabled) {
                 log.debug("User '$username' was${if (it) "" else " not"} granted permission '$permission' to $accessType access")
             }

@@ -1,8 +1,6 @@
 package org.octopusden.cloud.commons.security.client
 
 import com.sun.net.httpserver.HttpServer
-import java.net.InetSocketAddress
-import java.net.URLDecoder
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -11,6 +9,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.octopusden.cloud.commons.security.config.AuthClientProperties
 import org.octopusden.cloud.commons.security.config.AuthServerProperties
+import java.net.InetSocketAddress
+import java.net.URLDecoder
 
 /**
  * Tests for the token requests [AuthServerClient] sends to the auth server,
@@ -31,26 +31,28 @@ class AuthServerClientTest {
         server = HttpServer.create(InetSocketAddress(0), 0)
         val base = { "http://localhost:${server.address.port}" }
         server.createContext("/realms/F1/.well-known/openid-configuration") { exchange ->
-            val body = """
+            val body =
+                """
                 {
                   "token_endpoint": "${base()}/token",
                   "userinfo_endpoint": "${base()}/userinfo"
                 }
-            """.trimIndent().toByteArray()
+                """.trimIndent().toByteArray()
             exchange.responseHeaders.add("Content-Type", "application/json")
             exchange.sendResponseHeaders(200, body.size.toLong())
             exchange.responseBody.use { it.write(body) }
         }
         server.createContext("/token") { exchange ->
             capturedTokenRequestBody = exchange.requestBody.readBytes().decodeToString()
-            val body = """
+            val body =
+                """
                 {
                   "access_token": "stub-access",
                   "refresh_token": "stub-refresh",
                   "expires_in": 300,
                   "refresh_expires_in": 0
                 }
-            """.trimIndent().toByteArray()
+                """.trimIndent().toByteArray()
             exchange.responseHeaders.add("Content-Type", "application/json")
             exchange.sendResponseHeaders(200, body.size.toLong())
             exchange.responseBody.use { it.write(body) }
@@ -81,7 +83,11 @@ class AuthServerClientTest {
         val jwt = client().generateOfflineJwt("alice", "secret")
         assertEquals("stub-access", jwt.accessToken)
 
-        val scopes = capturedParams().getValue("scope").single().split(" ").toSet()
+        val scopes = capturedParams()
+            .getValue("scope")
+            .single()
+            .split(" ")
+            .toSet()
         assertTrue("offline_access" in scopes) { "offline_access scope missing: $scopes" }
         assertTrue("openid" in scopes) {
             "openid scope missing ($scopes): without it Keycloak userinfo returns 403 " +

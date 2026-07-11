@@ -7,8 +7,7 @@ data class UserInfo(
     @JsonProperty("roles")
     @field:JsonFormat(with = [JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY])
     val roles: Collection<String>,
-
     @JsonProperty("groups")
     @field:JsonFormat(with = [JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY])
-    val groups: Collection<String>
+    val groups: Collection<String>,
 )
