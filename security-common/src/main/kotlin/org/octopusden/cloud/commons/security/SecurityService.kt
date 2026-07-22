@@ -8,27 +8,31 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Component
 
 @Component
-open class SecurityService(private val securityProperties: SecurityProperties) {
-    fun getCurrentUser(): User {
-        return SecurityContextHolder.getContext()
+open class SecurityService(
+    private val securityProperties: SecurityProperties,
+) {
+    fun getCurrentUser(): User =
+        SecurityContextHolder
+            .getContext()
             ?.authentication
             ?.let { authentication ->
                 val username =
                     (authentication.credentials as? Jwt)?.claims?.get("preferred_username") as? String ?: ""
 
                 val authorities = authentication.authorities ?: emptySet()
-                val roles = authorities.filter { it.authority.startsWith(ROLE_PREFIX) }
+                val roles = authorities
+                    .filter { it.authority.startsWith(ROLE_PREFIX) }
                     .map { it.authority }
                     .mapNotNull { name -> securityProperties.roles[name]?.let { name to it } }
                     .map { (name, permissions) -> Role(name, permissions) }
                     .toSet()
 
-                val groups = authorities.filter { it.authority.startsWith(GROUP_PREFIX) }
+                val groups = authorities
+                    .filter { it.authority.startsWith(GROUP_PREFIX) }
                     .map { it.authority.replace("^$GROUP_PREFIX".toRegex(), "") }
                     .toSet()
                 User(username, roles, groups)
             } ?: User("anonymous", emptySet(), emptySet())
-    }
 
     companion object {
         const val GROUP_PREFIX = "GROUP_"
