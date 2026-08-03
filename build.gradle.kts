@@ -17,6 +17,21 @@ repositories {
 }
 
 octopusQuality {
+    // Regression guard on what this repository publishes to Maven Central, from octopus-base
+    // v2.7.0. This repository had no guard at all before — it was pinned below v2.6.0, so the
+    // release-time fat-jar guard did not apply either, and a new module could start publishing
+    // without anyone deciding to.
+    publication {
+        enforceCentralPublications.set(true)
+        centralPublications.set(
+            setOf(
+                // Only this module publishes; the rest of the repository is internal.
+                ":octopus-security-common|mavenJava|" +
+                    "org.octopusden.octopus-cloud-commons:octopus-security-common|" +
+                    "[jar, jar:javadoc, jar:sources]",
+            ),
+        )
+    }
     // Repo has no coverage tool / no unit-test coverage target — disable coverage verification.
     coverage {
         enabled.set(false)
