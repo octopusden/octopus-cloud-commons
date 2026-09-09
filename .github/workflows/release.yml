@@ -2,6 +2,10 @@ name: Gradle Release
 
 on: workflow_dispatch
 
+# contents: write to create the tag, the GitHub release and its assets.
+permissions:
+  contents: write
+
 jobs:
   release:
     uses: octopusden/octopus-base/.github/workflows/common-java-gradle-release.yml@v3.0.0
